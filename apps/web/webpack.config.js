@@ -188,7 +188,7 @@ const devServer =
     ? {}
     : {
         server: {
-          type: "https",
+          type: "http",
           options: {
             key: fs.readFileSync("dev-server" + certSuffix + ".pem"),
             cert: fs.readFileSync("dev-server" + certSuffix + ".pem"),
@@ -300,7 +300,7 @@ const devServer =
             };
           }
         },
-        hot: false,
+        hot: true,
         port: envConfig.dev?.port ?? 8080,
         allowedHosts: envConfig.dev?.allowedHosts ?? "auto",
         client: {

@@ -51,49 +51,6 @@ export class NotificationsService implements NotificationsServiceAbstraction {
 
   async init(): Promise<void> {
     this.inited = false;
-    this.url = this.environmentService.getNotificationsUrl();
-
-    // Set notifications server URL to `https://-` to effectively disable communication
-    // with the notifications server from the client app
-    if (this.url === "https://-") {
-      return;
-    }
-
-    if (this.signalrConnection != null) {
-      this.signalrConnection.off("ReceiveMessage");
-      this.signalrConnection.off("Heartbeat");
-      await this.signalrConnection.stop();
-      this.connected = false;
-      this.signalrConnection = null;
-    }
-
-    this.signalrConnection = new signalR.HubConnectionBuilder()
-      .withUrl(this.url + "/hub", {
-        accessTokenFactory: () => this.apiService.getActiveBearerToken(),
-        skipNegotiation: true,
-        transport: signalR.HttpTransportType.WebSockets,
-      })
-      .withHubProtocol(new signalRMsgPack.MessagePackHubProtocol() as signalR.IHubProtocol)
-      // .configureLogging(signalR.LogLevel.Trace)
-      .build();
-
-    this.signalrConnection.on("ReceiveMessage", (data: any) =>
-      this.processNotification(new NotificationResponse(data)),
-    );
-    // eslint-disable-next-line
-    this.signalrConnection.on("Heartbeat", (data: any) => {
-      /*console.log('Heartbeat!');*/
-    });
-    this.signalrConnection.onclose(() => {
-      this.connected = false;
-      // FIXME: Verify that this floating promise is intentional. If it is, add an explanatory comment and ensure there is proper error handling.
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      this.reconnect(true);
-    });
-    this.inited = true;
-    if (await this.isAuthedAndUnlocked()) {
-      await this.reconnect(false);
-    }
   }
 
   async updateConnection(sync = false): Promise<void> {
