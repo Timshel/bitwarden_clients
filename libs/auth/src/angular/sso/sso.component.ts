@@ -49,7 +49,6 @@ import { PasswordGenerationServiceAbstraction } from "@bitwarden/generator-legac
 
 import { SsoClientType, SsoComponentService } from "./sso-component.service";
 
-
 interface QueryParams {
   code?: string;
   state?: string;
@@ -626,5 +625,8 @@ export class SsoComponent implements OnInit {
     if (storedIdentifier != null) {
       this.identifierFormControl.setValue(storedIdentifier);
     }
+
+    // Lastly, set the dummy value
+    this.identifierFormControl.setValue("Vaultwarden");
   }
 }

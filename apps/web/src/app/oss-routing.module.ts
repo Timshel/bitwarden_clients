@@ -353,9 +353,6 @@ const routes: Routes = [
             key: "singleSignOn",
           },
           titleId: "enterpriseSingleSignOn",
-          pageSubtitle: {
-            key: "singleSignOnEnterOrgIdentifierText",
-          },
           titleAreaMaxWidth: "md",
           pageIcon: SsoKeyIcon,
         } satisfies RouteDataProperties & AnonLayoutWrapperData,
